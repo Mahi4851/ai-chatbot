@@ -1,0 +1,29 @@
+📘 Course Name: Full Stack Web Development
+
+📅 Duration: 6 Months  
+💰 Fees: ₹25,000  
+
+🧠 What will you learn?
+- HTML, CSS, JavaScript
+- React, Node.js, MongoDB
+- Express, GitHub, Hosting
+
+💼 Projects:
+- Personal Portfolio Website
+- E-commerce App
+- Chat Application
+
+❓Q&A:
+Q: Is this course beginner-friendly?  
+A: Yes, this course is designed for beginners.
+
+Q: Are there live classes or recorded?  
+A: We offer both live and recorded sessions.
+
+Q: Will I get a certificate?  
+A: Yes, you’ll receive a certificate after completing the course.
+
+Q: Any placement support?  
+A: Yes, we provide placement assistance after completion.
+
+📞 For more details, contact: support@youracademy.com

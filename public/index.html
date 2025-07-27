@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Chatbot UI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #007bff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 999;
+    }
+
+    .chat-box {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 320px;
+      height: 450px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 998;
+    }
+
+    .chat-header {
+      background: #007bff;
+      color: white;
+      padding: 12px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
+    }
+
+    .chat-input button {
+      padding: 10px 15px;
+      border: none;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    .chat-message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 80%;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .chat-message.user {
+      background-color: #cce5ff;
+      align-self: flex-end;
+    }
+
+    .chat-message.bot {
+      background-color: #d1ecf1;
+      align-self: flex-start;
+    }
+
+    .chat-message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      align-self: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Floating Button -->
+<div class="chat-button" onclick="toggleChat()">💬</div>
+
+<!-- Chat Window -->
+<div class="chat-box" id="chatBox">
+  <div class="chat-header">Chat with Me</div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  const chatBox = document.getElementById('chatBox');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+
+  function toggleChat() {
+    chatBox.style.display = (chatBox.style.display === 'flex') ? 'none' : 'flex';
+    chatBox.style.flexDirection = 'column';
+  }
+
+  function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  }
+
+  function sendMessage() {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+
+    // Display user's message
+    const userMessage = document.createElement('div');
+    userMessage.className = 'chat-message user';
+    userMessage.textContent = msg;
+    chatMessages.appendChild(userMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Clear input
+    chatInput.value = '';
+
+    // Send to backend
+    fetch('http://localhost:5000/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: msg })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const botMessage = document.createElement('div');
+      botMessage.className = 'chat-message bot';
+      botMessage.textContent = '🤖 ' + data.reply;
+      chatMessages.appendChild(botMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    })
+    .catch(err => {
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'chat-message error';
+      errorMessage.textContent = '⚠️ Error: ' + err.message;
+      chatMessages.appendChild(errorMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  }
+</script>
+
+</body>
+</html>
